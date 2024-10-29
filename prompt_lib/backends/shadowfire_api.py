@@ -19,7 +19,10 @@ def retry_with_exponential_backoff(
     exponential_base: float = 2,
     jitter: bool = True,
     max_retries: int = 10,
-    errors: tuple = (TimeoutError,nemollm.exceptions.ApiException,),
+    errors: tuple = (
+        TimeoutError,
+        # nemollm.exceptions.ApiException,
+    ),
 ):
     """Retry a function with exponential backoff."""
 

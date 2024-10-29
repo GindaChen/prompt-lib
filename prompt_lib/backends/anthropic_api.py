@@ -1,4 +1,5 @@
 # Backend for a self-hosted API
+import openai
 import os
 from pprint import pprint
 from typing import Any, Dict
@@ -8,7 +9,9 @@ import requests
 from prompt_lib.backends.wrapper import BaseAPIWrapper
 
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "Your_Default_Value")
-client = anthropic.Client(ANTHROPIC_API_KEY)
+# client = anthropic.Client(ANTHROPIC_API_KEY, base_url="https://api.anthropic.com/v1")
+# client = anthropic.Client(ANTHROPIC_API_KEY, base_url="https://localhost:30000/v1/")
+client = openai.OpenAI(api_key=ANTHROPIC_API_KEY, base_url="https://localhost:30000/v1/")
 
 
 class AnthropicAPIWrapper(BaseAPIWrapper):
@@ -26,8 +29,10 @@ class AnthropicAPIWrapper(BaseAPIWrapper):
         response = client.completion(
             prompt=prompt,
             stop_sequences=[anthropic.HUMAN_PROMPT],
-            model=engine,
-            max_tokens_to_sample=max_tokens,
+            # model=engine,
+            model='default',
+            # max_tokens_to_sample=max_tokens,
+            max_tokens=max_tokens,
             temperature=temperature,
         )
 

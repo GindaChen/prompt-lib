@@ -10,13 +10,17 @@ import anthropic
 from prompt_lib.backends.wrapper import BaseAPIWrapper
 from prompt_lib.backends.self_hosted import OpenSourceAPIWrapper
 from prompt_lib.backends.anthropic_api import AnthropicAPIWrapper
+from prompt_lib.backends.openllm import AnyOpenAILLM
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
-
+openai.api_key = os.getenv("OPENAI_API_KEY", "sk-proj-1234567890")
+# client = openai.OpenAI(base_url="https://localhost:30000/v1/", api_key=openai.api_key)
 # check if orgainization is set
 
 if os.getenv("OPENAI_ORG") is not None:
     openai.organization = os.getenv("OPENAI_ORG")
+
+
+client = AnyOpenAILLM()
 
 
 # from https://github.com/openai/openai-cookbook/blob/main/examples/How_to_handle_rate_limits.ipynb
@@ -27,9 +31,10 @@ def retry_with_exponential_backoff(
     jitter: bool = True,
     max_retries: int = 10,
     errors: tuple = (
-        openai.error.RateLimitError,
-        openai.error.ServiceUnavailableError,
-        anthropic.RateLimitError,
+        "NoneError",
+        # openai.error.RateLimitError,
+        # openai.error.ServiceUnavailableError,
+        # anthropic.RateLimitError,
     ),
 ):
     """Retry a function with exponential backoff."""
@@ -80,8 +85,12 @@ class CompletionAPIWrapper(BaseAPIWrapper):
         top_p: float = 1,
         logprobs: Optional[int] = None,
     ) -> dict:
-        response = openai.Completion.create(
-            model=engine,
+        
+        # response = client.completion(
+        # response = client.completions.create(
+        response = client.completions(
+            # model=engine,
+            model='default',
             prompt=prompt,
             temperature=temperature,
             max_tokens=max_tokens,
@@ -224,9 +233,16 @@ class ChatGPTAPIWrapper(BaseAPIWrapper):
                 else:
                     response_combined["choices"] += response["choices"]
             return response_combined
-        response = openai.ChatCompletion.create(
-            model=engine,
+        
+        print(messages)
+        # response = openai.ChatCompletion.create(
+        # response = client.chat.completions.create(
+        response = client.chat(
+        # response = client.completions.create(
+            # model=engine,
+            model='default',
             messages=messages,
+            # prompt=messages,
             temperature=temperature,
             max_tokens=max_tokens,
             top_p=top_p,

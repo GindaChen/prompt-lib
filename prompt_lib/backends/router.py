@@ -8,10 +8,14 @@ from prompt_lib.backends.self_hosted import OpenSourceAPIWrapper
 
 # TODO: all of this should be in a config file
 backend_map = {
+    # "openai": OpenaiAPIWrapper,
+    # "shadowfire": ShadowFireWrapper,
+    # "alpa": AlpaWrapper,
+    # "self_hosted": OpenSourceAPIWrapper,
     "openai": OpenaiAPIWrapper,
-    "shadowfire": ShadowFireWrapper,
-    "alpa": AlpaWrapper,
-    "self_hosted": OpenSourceAPIWrapper,
+    "shadowfire": OpenaiAPIWrapper,
+    "alpa": OpenaiAPIWrapper,
+    "self_hosted": OpenaiAPIWrapper,
 }
 
 openai_engines = [
