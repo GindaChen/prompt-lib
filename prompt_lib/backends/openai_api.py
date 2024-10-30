@@ -309,7 +309,8 @@ class OpenaiAPIWrapper:
         num_completions: int = 1,
         **kwargs,
     ) -> dict:
-        api_wrapper = OpenaiAPIWrapper.get_api_wrapper(engine)
+        # api_wrapper = OpenaiAPIWrapper.get_api_wrapper(engine)
+        api_wrapper = CompletionAPIWrapper
         return api_wrapper.call(
             prompt=prompt,
             max_tokens=max_tokens,
