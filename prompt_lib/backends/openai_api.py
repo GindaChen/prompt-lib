@@ -132,7 +132,6 @@ class CompletionAPIWrapper(BaseAPIWrapper):
                     response_combined = response
                 else:
                     response_combined["choices"] += response["choices"]
-
             return response_combined
 
         response = CompletionAPIWrapper._call_api(

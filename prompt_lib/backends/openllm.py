@@ -45,7 +45,10 @@ def patch_completions__getitem__():
 patch_completions__getitem__()
 
 import os
+openai.api_key = os.getenv("OPENAI_API_KEY", "sk-proj-1234567890")
 OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "http://localhost:30000/v1/")
+print(f"{OPENAI_BASE_URL = }")
+# OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "http://localhost:30000/")
 
 class AnyOpenAILLM:
     def __init__(self, *args, **kwargs):
@@ -65,8 +68,9 @@ class AnyOpenAILLM:
         stop=None,
         n=None,
         logprobs=None,
+        best_of=None,
     ):
-        # print(prompt or messages)
+        # breakpoint()
         if prompt:
             result = self.model.completions.create(
                 model="default",
@@ -77,6 +81,7 @@ class AnyOpenAILLM:
                 stop=stop,
                 n=n,
                 logprobs=logprobs,
+                best_of=best_of,
             )
         else:
             result = self.model.chat.completions.create(
@@ -88,9 +93,19 @@ class AnyOpenAILLM:
                 stop=stop,
                 n=n,
                 logprobs=logprobs,
+                best_of=best_of,
             )
-        # print(result)
         return result
+        
 
     chat = __call__
     completions = __call__
+
+
+if __name__ == '__main__':
+    client = AnyOpenAILLM()
+    output = client(
+        prompt="Hello, world!",
+        logprobs=True,
+    )
+    print(output)
